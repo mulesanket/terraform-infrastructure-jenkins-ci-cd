@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    environment {
+        TF_DIR = ""
+    }
+    
     stages {
 
         stage("Set Environment") {
