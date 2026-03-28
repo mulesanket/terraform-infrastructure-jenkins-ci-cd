@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        TERRAFORM_DIRECTORY = ""
+        TERRAFORM_DIRECTORY = "environments/${BRANCH_NAME}"
     }
 
     stages {
@@ -14,10 +14,7 @@ pipeline {
         }
 
         stage("Set Environment") {
-            steps {
-                script {
-                    env.TERRAFORM_DIRECTORY = "environments/${env.BRANCH_NAME}"
-
+            steps {}
                     echo "Branch: ${env.BRANCH_NAME}"
                     echo "Terraform Directory: ${env.TERRAFORM_DIRECTORY}"
                 }
