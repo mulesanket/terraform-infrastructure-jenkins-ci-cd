@@ -17,7 +17,7 @@ pipeline {
 
                     env.TF_DIR = TF_DIR
                     echo "Branch: ${env.BRANCH_NAME}"
-                    echo "Terraform Directory: ${TF_DIR}"
+                    echo "Terraform Directory: ${env.TF_DIR}"
                 }
             }
         }
@@ -25,12 +25,20 @@ pipeline {
         stage("Validate Environment") {
             steps {
                 script {
-                    if (!fileExists(TF_DIR)) {
-                        error "Terraform directory does not exist: ${TF_DIR}"
+                    if (!fileExists(env.TF_DIR)) {
+                        error "Terraform directory does not exist: ${env.TF_DIR}"
                     }
                     else {
-                        echo "Terraform directory exists: ${TF_DIR}"
+                        echo "Terraform directory exists: ${env.TF_DIR}"
                     }
+                }
+            }
+        }
+
+        stage ("Terraform Init") {
+            steps {
+                dir("${env.TF_DIR}") {
+                    sh "terraform init"
                 }
             }
         }
@@ -38,7 +46,7 @@ pipeline {
         stage("Deploy Dev") {
             when { branch "dev" }
             steps {
-                dir("${TF_DIR}") {
+                dir("${env.TF_DIR}") {
                     sh "echo Running Terraform for DEV"
                 }
             }
@@ -49,7 +57,7 @@ pipeline {
             steps {
                 input message: "Approve deployment to PRODUCTION?", ok: "Deploy"
 
-                dir("${TF_DIR}") {
+                dir("${env.TF_DIR}") {
                     sh "echo Running Terraform for PROD"
                 }
             }
