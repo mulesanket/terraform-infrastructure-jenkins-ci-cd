@@ -9,4 +9,4 @@ resource "aws_instance" "myserver" {
       Name = var.name
       Environment = var.env
     }
-}
+} 
