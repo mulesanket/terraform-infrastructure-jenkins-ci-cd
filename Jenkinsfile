@@ -14,12 +14,11 @@ pipeline {
         }
 
         stage("Set Environment") {
-            steps {}
+            steps {
                     echo "Branch: ${env.BRANCH_NAME}"
                     echo "Terraform Directory: ${env.TERRAFORM_DIRECTORY}"
                 }
             }
-        }
 
         stage("Validate Environment") {
             steps {
@@ -58,7 +57,6 @@ pipeline {
                 }
             }
         }
-    }
 
     post {
         success {
