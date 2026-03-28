@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    tools {
+        terraform "terraform-1.6.0"
+    }
+
     stages {
 
         stage("Set Environment") {
