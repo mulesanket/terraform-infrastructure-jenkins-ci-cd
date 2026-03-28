@@ -3,7 +3,7 @@ pipeline {
     agent any
 
     environment {
-        Terraform_Directory = ""
+        TERRAFORM_DIRECTORY = ""
     }
     
     stages {
