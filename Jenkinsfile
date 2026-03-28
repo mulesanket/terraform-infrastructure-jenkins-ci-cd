@@ -17,10 +17,10 @@ pipeline {
             steps {
                 script {
                     if (env.BRANCH_NAME == "main") {
-                        env.Terraform_Directory = "environments/prod"
+                        env.TERRAFORM_DIRECTORY = "environments/prod"
                     }
                     else if (env.BRANCH_NAME == "dev") {
-                        env.Terraform_Directory = "environments/dev"
+                        env.TERRAFORM_DIRECTORY = "environments/dev"
                     }
                     else {
                         error "Branch name ${env.BRANCH_NAME} is not recognized."
