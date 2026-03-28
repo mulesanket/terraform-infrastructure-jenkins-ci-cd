@@ -27,7 +27,7 @@ pipeline {
                     }
 
                     echo "Branch name: ${env.BRANCH_NAME}"
-                    echo "Terraform directory set to: ${env.Terraform_Directory}"
+                    echo "Terraform directory set to: ${env.TERRAFORM_DIRECTORY}"
                 }
             }
         }
