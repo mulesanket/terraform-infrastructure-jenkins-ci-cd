@@ -1,15 +1,12 @@
 pipeline {
     agent any
 
-    environment {
-        TF_DIR = ""
-    }
-    
     stages {
 
         stage("Set Environment") {
             steps {
                 script {
+                    def TF_DIR
                     if (env.BRANCH_NAME == "dev") {
                         TF_DIR = "environments/dev"
                     } else if (env.BRANCH_NAME == "main") {
@@ -18,6 +15,7 @@ pipeline {
                         error "Unsupported branch: ${env.BRANCH_NAME}"
                     }
 
+                    env.TF_DIR = TF_DIR
                     echo "Branch: ${env.BRANCH_NAME}"
                     echo "Terraform Directory: ${TF_DIR}"
                 }
@@ -29,6 +27,9 @@ pipeline {
                 script {
                     if (!fileExists(TF_DIR)) {
                         error "Terraform directory does not exist: ${TF_DIR}"
+                    }
+                    else {
+                        echo "Terraform directory exists: ${TF_DIR}"
                     }
                 }
             }
