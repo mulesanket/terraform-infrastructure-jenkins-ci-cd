@@ -3,7 +3,7 @@ pipeline {
     agent any
 
     environment {
-        TERRAFORM_DIRECTORY = ""
+        TERRAFORM_DIRECTORY = env.BRANCH_NAME
     }
     
     stages {
