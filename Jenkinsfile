@@ -3,33 +3,26 @@ pipeline {
     agent any
 
     environment {
-        TERRAFORM_DIRECTORY = "${env.BRANCH_NAME}"
+        TERRAFORM_DIRECTORY = ""
     }
     
     stages {
-        stage ("Pipeline Start") {
-            steps {
-                echo "Starting the pipeline..."
-            }   
+        stage('Deploy Dev') {
+    when { branch 'dev' }
+    steps {
+        dir('environments/dev') {
+            sh 'terraform init'
         }
+    }
+}
 
-        stage ("Setting Environment") {
-            steps {
-                script {
-                    if (env.BRANCH_NAME == "main") {
-                        env.TERRAFORM_DIRECTORY = "environments/prod"
-                    }
-                    else if (env.BRANCH_NAME == "dev") {
-                        env.TERRAFORM_DIRECTORY = "environments/dev"
-                    }
-                    else {
-                        error "Branch name ${env.BRANCH_NAME} is not recognized."
-                    }
-
-                    echo "Branch name: ${env.BRANCH_NAME}"
-                    echo "Terraform directory set to: ${env.TERRAFORM_DIRECTORY}"
-                }
-            }
+        stage('Deploy Prod') {
+    when { branch 'main' }
+    steps {
+        dir('environments/prod') {
+            sh 'terraform init'
         }
+    }
+}
     }
 }
