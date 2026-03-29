@@ -75,6 +75,13 @@ pipeline {
             }
         }
 
+        stage("Approval for Dev") {
+            when { branch "dev" }
+            steps {
+                input message: "Approve deployment to DEV?", ok: "Proceed"
+            }
+        }
+
         stage("Deploy Dev") {
             when { branch "dev" }
             steps {
