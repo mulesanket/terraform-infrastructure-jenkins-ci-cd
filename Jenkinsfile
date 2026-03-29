@@ -27,8 +27,7 @@ pipeline {
                     }
 
                     env.TERRAFORM_DIRECTORY = TERRAFORM_DIRECTORY
-                    echo "Branch: ${env.BRANCH_NAME}"
-                    echo "Terraform Directory: ${env.TERRAFORM_DIRECTORY}"
+                    echo "Using TF Dir: ${env.TERRAFORM_DIRECTORY}"
                 }
             }
         }
@@ -39,17 +38,39 @@ pipeline {
                     if (!fileExists(env.TERRAFORM_DIRECTORY)) {
                         error "Terraform directory does not exist: ${env.TERRAFORM_DIRECTORY}"
                     }
-                    else {
-                        echo "Terraform directory exists: ${env.TERRAFORM_DIRECTORY}"
-                    }
                 }
             }
         }
 
-        stage ("Terraform Init") {
+        stage("Terraform Init") {
             steps {
                 dir("${env.TERRAFORM_DIRECTORY}") {
                     sh "terraform init"
+                }
+            }
+        }
+
+        stage("Terraform Format Check") {
+            steps {
+                dir("${env.TERRAFORM_DIRECTORY}") {
+                    sh "terraform fmt -check -recursive"
+                }
+            }
+        }
+
+        stage("Terraform Validate") {
+            steps {
+                dir("${env.TERRAFORM_DIRECTORY}") {
+                    sh "terraform validate"
+                }
+            }
+        }
+
+        stage("Terraform Plan") {
+            steps {
+                dir("${env.TERRAFORM_DIRECTORY}") {
+                    sh "terraform plan -out=tfplan"
+                    sh "terraform show tfplan"
                 }
             }
         }
@@ -58,18 +79,7 @@ pipeline {
             when { branch "dev" }
             steps {
                 dir("${env.TERRAFORM_DIRECTORY}") {
-                    sh "echo Running Terraform for DEV"
-                }
-            }
-        }
-
-        stage("Deploy Prod") {
-            when { branch "main" }
-            steps {
-                input message: "Approve deployment to PRODUCTION?", ok: "Deploy"
-
-                dir("${env.TERRAFORM_DIRECTORY}") {
-                    sh "echo Running Terraform for PROD"
+                    sh "terraform apply -auto-approve tfplan"
                 }
             }
         }
