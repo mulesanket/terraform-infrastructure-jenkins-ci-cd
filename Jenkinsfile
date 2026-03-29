@@ -26,6 +26,12 @@ pipeline {
             }
         }
 
+        stage ("Checkout Infrastructure Code") {
+            steps {
+                checkout scm
+            }
+        }
+
         stage("Set Environment") {
             steps {
                 script {
