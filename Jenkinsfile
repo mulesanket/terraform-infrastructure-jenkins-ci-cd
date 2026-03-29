@@ -10,18 +10,19 @@ pipeline {
         stage("Set Environment") {
             steps {
                 script {
-                    def TF_DIR
+                    def TERRAFORM_DIRECTORY
+
                     if (env.BRANCH_NAME == "dev") {
-                        TF_DIR = "environments/dev"
+                        TERRAFORM_DIRECTORY = "environments/dev"
                     } else if (env.BRANCH_NAME == "main") {
-                        TF_DIR = "environments/prod"
+                        TERRAFORM_DIRECTORY = "environments/prod"
                     } else {
                         error "Unsupported branch: ${env.BRANCH_NAME}"
                     }
 
-                    env.TF_DIR = TF_DIR
+                    env.TERRAFORM_DIRECTORY = TERRAFORM_DIRECTORY
                     echo "Branch: ${env.BRANCH_NAME}"
-                    echo "Terraform Directory: ${env.TF_DIR}"
+                    echo "Terraform Directory: ${env.TERRAFORM_DIRECTORY}"
                 }
             }
         }
@@ -29,11 +30,11 @@ pipeline {
         stage("Validate Environment") {
             steps {
                 script {
-                    if (!fileExists(env.TF_DIR)) {
-                        error "Terraform directory does not exist: ${env.TF_DIR}"
+                    if (!fileExists(env.TERRAFORM_DIRECTORY)) {
+                        error "Terraform directory does not exist: ${env.TERRAFORM_DIRECTORY}"
                     }
                     else {
-                        echo "Terraform directory exists: ${env.TF_DIR}"
+                        echo "Terraform directory exists: ${env.TERRAFORM_DIRECTORY}"
                     }
                 }
             }
@@ -41,7 +42,7 @@ pipeline {
 
         stage ("Terraform Init") {
             steps {
-                dir("${env.TF_DIR}") {
+                dir("${env.TERRAFORM_DIRECTORY}") {
                     sh "terraform init"
                 }
             }
@@ -50,7 +51,7 @@ pipeline {
         stage("Deploy Dev") {
             when { branch "dev" }
             steps {
-                dir("${env.TF_DIR}") {
+                dir("${env.TERRAFORM_DIRECTORY}") {
                     sh "echo Running Terraform for DEV"
                 }
             }
@@ -61,7 +62,7 @@ pipeline {
             steps {
                 input message: "Approve deployment to PRODUCTION?", ok: "Deploy"
 
-                dir("${env.TF_DIR}") {
+                dir("${env.TERRAFORM_DIRECTORY}") {
                     sh "echo Running Terraform for PROD"
                 }
             }
