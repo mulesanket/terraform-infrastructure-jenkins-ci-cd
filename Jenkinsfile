@@ -1,6 +1,12 @@
 pipeline {
     agent any
 
+    options {
+        timestamps()
+        ansiColor('xterm')
+        disableConcurrentBuilds()
+    }
+
     tools {
         terraform "terraform-1.6.0"
     }
