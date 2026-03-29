@@ -5,13 +5,26 @@ pipeline {
         timestamps()
         ansiColor('xterm')
         disableConcurrentBuilds()
+        skipStagesAfterUnstable()
+        timeout(time: 1, unit: 'HOURS')
     }
 
     tools {
         terraform "terraform-1.6.0"
     }
 
+    environment {
+        TF_IN_AUTOMATION = "true"
+        AWS_REGION = "ap-south-1"
+    }
+
     stages {
+
+        stage("Clean Workspace") {
+            steps {
+                cleanWs()
+            }
+        }
 
         stage("Set Environment") {
             steps {
@@ -27,7 +40,8 @@ pipeline {
                     }
 
                     env.TERRAFORM_DIRECTORY = TERRAFORM_DIRECTORY
-                    echo "Using TF Dir: ${env.TERRAFORM_DIRECTORY}"
+                    echo "Branch: ${env.BRANCH_NAME}"
+                    echo "Terraform Dir: ${env.TERRAFORM_DIRECTORY}"
                 }
             }
         }
@@ -45,7 +59,9 @@ pipeline {
         stage("Terraform Init") {
             steps {
                 dir("${env.TERRAFORM_DIRECTORY}") {
-                    sh "terraform init"
+                    retry(2) {
+                        sh "terraform init"
+                    }
                 }
             }
         }
@@ -75,10 +91,18 @@ pipeline {
             }
         }
 
+        stage("Archive Plan") {
+            steps {
+                archiveArtifacts artifacts: "${env.TERRAFORM_DIRECTORY}/tfplan", fingerprint: true
+            }
+        }
+
         stage("Approval for Dev") {
             when { branch "dev" }
             steps {
-                input message: "Approve deployment to DEV?", ok: "Proceed"
+                timeout(time: 10, unit: 'MINUTES') {
+                    input message: "Approve deployment to DEV?", ok: "Proceed"
+                }
             }
         }
 
@@ -89,6 +113,18 @@ pipeline {
                     sh "terraform apply -auto-approve tfplan"
                 }
             }
+        }
+    }
+
+    post {
+        always {
+            echo "Pipeline completed"
+        }
+        success {
+            echo "Terraform Deployment successful"
+        }
+        failure {
+            echo "Terraform Deployment failed"
         }
     }
 }
