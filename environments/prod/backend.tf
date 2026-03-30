@@ -7,7 +7,7 @@ terraform {
     dynamodb_table = "terraform-infra-state-lock-table-prod"
     encrypt        = true
 
-    assume_role {
+    assume_role = {
       role_arn = "arn:aws:iam::315435444725:role/TerraformExecutionRole"
     }
   }
