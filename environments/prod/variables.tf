@@ -14,3 +14,11 @@ variable "env" {
 variable "key_name" {
   type = string
 }
+
+variable "aws_region" {
+  type = string
+}
+
+variable "role_arn" {
+  type = string
+}
