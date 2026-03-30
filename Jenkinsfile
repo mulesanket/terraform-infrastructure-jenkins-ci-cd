@@ -120,6 +120,24 @@ pipeline {
                 }
             }
         }
+
+        stage("Approval for Prod") {
+            when { branch "main" }
+            steps {
+                timeout(time: 10, unit: 'MINUTES') {
+                    input message: "Approve deployment to PROD?", ok: "Proceed"
+                }
+            }
+        }
+
+        stage("Deploy Prod") {
+            when { branch "main" }
+            steps {
+                dir("${env.TERRAFORM_DIRECTORY}") {
+                    sh "terraform apply -auto-approve tfplan"
+                }
+            }
+        }
     }
 
     post {
