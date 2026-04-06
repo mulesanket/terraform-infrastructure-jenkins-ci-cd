@@ -1,11 +1,10 @@
 
-module "ec2" {
-  source = "../../modules/ec2"
-
-  name          = var.name
-  env           = var.env
-  ami_id        = data.aws_ami.ubuntu_ami.id
-  instance_type = var.instance_type
-  subnet_id     = data.aws_subnets.default.ids[0]
-  key_name      = var.key_name
+# --- VPC Module ---
+module "vpc" {
+  source               = "../modules/vpc"
+  name_prefix          = var.name_prefix
+  vpc_cidr             = var.vpc_cidr
+  public_subnet_cidrs  = var.public_subnet_cidrs
+  private_subnet_cidrs = var.private_subnet_cidrs
+  azs                  = var.azs
 }
