@@ -17,6 +17,11 @@ variable "name_prefix" {
   type        = string
 }
 
+variable "cluster_name" {
+  description = "Name of the cluster"
+  type        = string
+}
+
 variable "aws_region" {
   description = "AWS region to deploy resources in"
   type        = string
