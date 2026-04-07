@@ -56,10 +56,10 @@ resource "aws_subnet" "public" {
   map_public_ip_on_launch = true
 
   tags = {
-    Name = "${var.name_prefix}-public-subnet-${count.index + 1}"
+    Name                                        = "${var.name_prefix}-public-subnet-${count.index + 1}"
     "kubernetes.io/cluster/${var.cluster_name}" = "shared"
-    "kubernetes.io/role/elb"                  = "1"
-  }  
+    "kubernetes.io/role/elb"                    = "1"
+  }
 }
 
 #Private Subnet
@@ -70,9 +70,9 @@ resource "aws_subnet" "private" {
   availability_zone = var.azs[count.index]
 
   tags = {
-    Name = "${var.name_prefix}-private-subnet-${count.index + 1}"
+    Name                                        = "${var.name_prefix}-private-subnet-${count.index + 1}"
     "kubernetes.io/cluster/${var.cluster_name}" = "shared"
-    "kubernetes.io/role/internal-elb"          = "1"
+    "kubernetes.io/role/internal-elb"           = "1"
   }
 }
 
