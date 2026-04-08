@@ -116,7 +116,7 @@ pipeline {
             when { branch "dev" }
             steps {
                 dir("${env.TERRAFORM_DIRECTORY}") {
-                    sh "terraform apply -auto-approve tfplan"
+                    sh "terraform destroy` -auto-approve"
                 }
             }
         }
