@@ -11,20 +11,20 @@ module "vpc" {
 }
 
 # --- IAM Module ---
-module "iam" {
-  source       = "../modules/iam"
-  cluster_name = var.cluster_name
-}
+# module "iam" {
+#   source       = "../modules/iam"
+#   cluster_name = var.cluster_name
+# }
 
-# --- EKS Module ---
-module "eks" {
-  source               = "../modules/eks"
-  cluster_name         = var.cluster_name
-  eks_version          = var.eks_version
-  eks_cluster_role_arn = module.iam.eks_cluster_role_arn
-  private_subnet_ids   = module.vpc.private_subnet_ids
-  eks_node_role_arn    = module.iam.eks_cluster_node_role_arn
+# # --- EKS Module ---
+# module "eks" {
+#   source               = "../modules/eks"
+#   cluster_name         = var.cluster_name
+#   eks_version          = var.eks_version
+#   eks_cluster_role_arn = module.iam.eks_cluster_role_arn
+#   private_subnet_ids   = module.vpc.private_subnet_ids
+#   eks_node_role_arn    = module.iam.eks_cluster_node_role_arn
 
-  # ensure cluster waits for VPC + IAM
-  depends_on = [module.vpc, module.iam]
-}
+#   # ensure cluster waits for VPC + IAM
+#   depends_on = [module.vpc, module.iam]
+# }
