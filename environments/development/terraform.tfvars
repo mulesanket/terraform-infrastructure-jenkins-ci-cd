@@ -12,4 +12,4 @@ private_subnet_cidrs = ["10.0.10.0/24", "10.0.20.0/24"]
 azs                  = ["ap-south-1a", "ap-south-1b"]
 
 # --- EKS Variables ---
-eks_version  = "1.34"
+eks_version = "1.34"
