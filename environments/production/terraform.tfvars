@@ -4,7 +4,7 @@ aws_region = "ap-south-1"
 role_arn   = "arn:aws:iam::315435444725:role/TerraformExecutionRole-Prod"
 
 # --- VPC Variables ---
-name_prefix          = "my-prod-vpc"
+name_prefix          = "my-prod"
 cluster_name         = "my-prod-eks-cluster"
 vpc_cidr             = "10.0.0.0/16"
 public_subnet_cidrs  = ["10.0.1.0/24", "10.0.2.0/24"]

@@ -43,3 +43,15 @@ variable "azs" {
   type        = list(string)
 }
 
+#IAM module variables
+variable "cluster_name" {
+  type        = string
+  description = "EKS cluster name"
+}
+
+# EKS module variables
+variable "eks_version" {
+  type        = string
+  description = "EKS cluster version"
+  default     = "1.27"
+}
