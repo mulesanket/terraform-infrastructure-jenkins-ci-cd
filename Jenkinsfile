@@ -38,9 +38,9 @@ pipeline {
                     def TERRAFORM_DIRECTORY
 
                     if (env.BRANCH_NAME == "dev") {
-                        TERRAFORM_DIRECTORY = "environments/dev"
+                        TERRAFORM_DIRECTORY = "environments/development"
                     } else if (env.BRANCH_NAME == "main") {
-                        TERRAFORM_DIRECTORY = "environments/prod"
+                        TERRAFORM_DIRECTORY = "environments/production"
                     } else {
                         error "Unsupported branch: ${env.BRANCH_NAME}"
                     }
